@@ -1,0 +1,51 @@
+.login-loading-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(245, 246, 247);
+    color-scheme: light;
+}
+
+.login-loading-splash.is-hidden {
+    display: none;
+}
+
+.login-loading-splash .ll-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-loading-splash .ll-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(3, 199, 90, 0.2);
+    border-top-color: #03c75a;
+    border-radius: 50%;
+    animation: ll-spin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+.login-loading-splash .ll-blind {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0) !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px;
+    overflow: hidden !important;
+}
+
+@keyframes ll-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+[data-theme="greenDark"] .login-loading-splash {
+    background: rgb(23, 24, 26);
+    color-scheme: dark;
+}

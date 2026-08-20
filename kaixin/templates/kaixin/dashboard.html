@@ -1,0 +1,129 @@
+{% extends "kaixin/base.html" %}
+
+{% block title %}Dashboard · KaiXin{% endblock %}
+
+{% block body %}
+<div class="shell">
+    <header class="topbar">
+        <div class="brand">Kai<span>Xin</span></div>
+        <nav class="nav">
+            <a class="is-active" href="{% url 'kaixin:dashboard' %}">Request Logs</a>
+            <a href="{% url 'kaixin:blacklist' %}">Blacklist</a>
+            {% if is_superadmin %}<a href="{% url 'kaixin:admins' %}">Admin Approvals</a>{% endif %}
+            <span class="user">{{ admin.username }}{% if is_superadmin %} · Superadmin{% endif %}</span>
+            <form method="post" action="{% url 'kaixin:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-ghost btn-sm" type="submit">Sign Out</button>
+            </form>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <h1>Requests by IP</h1>
+                <p class="lede">All requests grouped by IP address.</p>
+            </div>
+            {% if rows %}
+            <form method="post" onsubmit="return confirm('Delete ALL request logs for every IP? This cannot be undone.');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_all">
+                <button class="btn btn-danger btn-sm" type="submit">Delete All Logs</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <form class="export-form" method="get" action="{% url 'kaixin:export_logs' %}">
+            <div class="export-fields">
+                <label>
+                    <span>IP (optional)</span>
+                    <input type="text" name="ip" placeholder="All IPs" autocomplete="off">
+                </label>
+                <label>
+                    <span>Since</span>
+                    <input type="datetime-local" name="since" lang="en">
+                </label>
+                <label>
+                    <span>Until</span>
+                    <input type="datetime-local" name="until" lang="en">
+                </label>
+            </div>
+            <button class="btn btn-ghost btn-sm" type="submit">Export JSON</button>
+        </form>
+
+        {% if rows %}
+        <div class="table-wrap table-wrap-fit">
+            <table class="table-fixed">
+                <colgroup>
+                    <col class="col-ip">
+                    <col class="col-count">
+                    <col class="col-seen">
+                    <col class="col-device">
+                    <col class="col-reason">
+                    <col class="col-actions">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>Count</th>
+                        <th>Last Seen</th>
+                        <th>Device</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td class="mono cell-clip" title="{{ row.ip }}">{{ row.ip }}</td>
+                        <td>{{ row.count }}</td>
+                        <td class="mono cell-clip" title="{{ row.last_seen }}">{{ row.last_seen }}</td>
+                        <td class="cell-clip" title="{{ row.devices }}">{{ row.devices }}</td>
+                        <td>
+                            {% if row.is_local %}
+                            <span class="badge badge-ok">Local</span>
+                            {% elif row.blocked %}
+                            <span class="badge badge-wait">{% if row.block_reason %}{{ row.block_reason }}{% else %}Blocked{% endif %}</span>
+                            {% else %}
+                            <span class="badge badge-ok">Active</span>
+                            {% endif %}
+                        </td>
+                        <td class="cell-actions">
+                            <div class="actions actions-row">
+                                <a class="btn btn-ghost btn-sm" href="{% url 'kaixin:ip_logs' row.ip %}">Details</a>
+                                {% if row.is_local %}
+                                <span class="btn btn-ghost btn-sm is-disabled" title="Local addresses cannot be blocked">Block</span>
+                                {% elif row.blocked %}
+                                <form method="post" onsubmit="return confirm('Unblock {{ row.ip }}?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="unblock">
+                                    <input type="hidden" name="ip" value="{{ row.ip }}">
+                                    <button class="btn btn-ghost btn-sm" type="submit">Unblock</button>
+                                </form>
+                                {% else %}
+                                <form method="post" onsubmit="return confirm('Block {{ row.ip }}?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="block">
+                                    <input type="hidden" name="ip" value="{{ row.ip }}">
+                                    <button class="btn btn-danger btn-sm" type="submit">Block</button>
+                                </form>
+                                {% endif %}
+                                <form method="post" onsubmit="return confirm('Delete all request logs for {{ row.ip }}?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="ip" value="{{ row.ip }}">
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete Logs</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">No request logs yet.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

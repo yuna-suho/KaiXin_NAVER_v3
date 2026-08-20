@@ -1,0 +1,213 @@
+@charset "utf-8";
+
+
+
+@font-face { font-family: NanumSquareL; font-weight: 400; src: url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareL.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareL.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareL.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: NanumSquareR; font-weight: 400; src: url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareR.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareR.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareR.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: NanumSquareB; font-weight: 400; src: url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareB.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareB.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareB.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: NanumSquareEB; font-weight: 400; src: url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareEB.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareEB.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/NanumSquareEB.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 100; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Thin.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Thin.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Thin.otf") format("opentype"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Thin.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 200; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraLight.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraLight.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraLight.otf") format("opentype"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraLight.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 300; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Light.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Light.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Light.otf") format("opentype"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Light.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 400; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Regular.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Regular.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Regular.otf") format("opentype"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Regular.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 500; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Medium.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Medium.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Medium.otf") format("opentype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 600; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-SemiBold.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-SemiBold.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-SemiBold.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 700; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Bold.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Bold.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Bold.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 800; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraBold.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraBold.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-ExtraBold.ttf") format("truetype"); }
+
+
+
+@font-face { font-family: pretendard; font-weight: 900; src: url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Black.woff2") format("woff2"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Black.woff") format("woff"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Black.otf") format("opentype"), url("https://ssl.pstatic.net/static/nid/webfont/Pretendard-Black.ttf") format("truetype"); }
+
+
+
+body, button, dd, dl, dt, fieldset, form, h1, h2, h3, h4, h5, h6, input, legend, li, ol, p, select, table, td, textarea, th, ul { margin: 0px; padding: 0px; font-family: pretendard, -apple-system, BlinkMacSystemFont, helvetica, "Apple SD Gothic Neo", sans-serif; text-size-adjust: none; }
+
+
+
+body, html { font-size: 16px; height: 100%; box-sizing: border-box; }
+
+
+
+*, ::after, ::before { box-sizing: inherit; }
+
+
+
+*, ::after, ::before { box-sizing: border-box; }
+
+
+
+body, button, input, select, table, textarea { font-size: 16px; }
+
+
+
+button, input, select, textarea { border-radius: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: 0px 0px; appearance: none; text-decoration: none; cursor: pointer; text-size-adjust: none; }
+
+
+
+label { cursor: pointer; }
+
+
+
+fieldset, img { border: 0px; }
+
+
+
+ol, ul { list-style: none; }
+
+
+
+address, em { font-style: normal; }
+
+
+
+a { text-decoration: none; cursor: pointer; }
+
+
+
+table { border-collapse: collapse; border-spacing: 0px; text-size-adjust: none; }
+
+
+
+hr { display: none !important; }
+
+
+
+.u_skip a { position: absolute; top: 0px; left: 0px; transform: translateY(-100%); padding: 10px 16px; background-color: rgb(0, 0, 0); border-radius: 8px; color: rgb(255, 255, 255); font-size: 14px; z-index: 9999; text-decoration: none; transition: transform 0.2s; }
+
+
+
+.u_skip a:active, .u_skip a:focus { transform: translateY(0px); }
+
+
+
+.input_stay:checked + .login_stay::before, .login_stay::before, .qrcode_explain .explain_item::before, .qrcode_explain .explain_item:nth-child(2)::before { background-image: url("../sprite/m_sp_00_common_dark_a922a481.png"); background-size: 114px 94px; background-repeat: no-repeat; }
+
+
+
+.another_id::before, .btn_back::before, .btn_captcha_image::after, .btn_captcha_refresh::after, .btn_captcha_voice::after, .btn_delete, .btn_hide, .btn_hide.see, .captcha_voice .img_voice, .dual_item.passkey .btn_done .text::before, .footer_item .language_text::after, .icon_forward_nexon, .login_link .text::after, .notice_box::before, .qrcode_explain .explain_item .icon_arrow, .qrcode_time .spare_time .spare::before, .qrlogin_link .text::after, .subtitle .onetime_desc .bullet_arrow { background-image: linear-gradient(transparent, transparent), url("../sprite/sp_01_global_login_dark_73b6bd6b.svg"); background-size: 152px 150px; background-repeat: no-repeat; }
+
+
+
+.btn_back::before { background-position: -3px -101px; background-repeat: no-repeat; width: 24px; height: 24px; }
+
+
+
+.footer_item .language_text::after { background-position: -131px -95px; background-repeat: no-repeat; width: 16px; height: 16px; }
+
+
+
+.btn_delete { background-position: -59px -3px; background-repeat: no-repeat; width: 36px; height: 36px; }
+
+
+
+.btn_hide { background-position: -45px -59px; background-repeat: no-repeat; width: 36px; height: 36px; }
+
+
+
+.btn_hide.see { background-position: -3px -59px; background-repeat: no-repeat; width: 36px; height: 36px; }
+
+
+
+.login_stay::before { background-position: -60px -75px; background-repeat: no-repeat; width: 16px; height: 19px; }
+
+
+
+.input_stay:checked + .login_stay::before { background-position: -42px -75px; background-repeat: no-repeat; width: 16px; height: 19px; }
+
+
+
+.qrlogin_link .text::after { background-position: -131px -73px; background-repeat: no-repeat; width: 16px; height: 16px; }
+
+
+
+.qrcode_code { background-color: var(--color-neutral-background-static-white); }
+
+
+
+.qrcode_time .spare_time .spare::before { background-position: -131px -3px; background-repeat: no-repeat; width: 18px; height: 18px; }
+
+
+
+.qrcode_explain .explain_item:nth-child(2)::before { background-position: -21px -75px; background-repeat: no-repeat; width: 19px; height: 19px; }
+
+
+
+.qrcode_explain .explain_item::before { background-position: 0px -75px; background-repeat: no-repeat; width: 19px; height: 19px; }
+
+
+
+.qrcode_explain .explain_item .icon_arrow { background-position: -3px -131px; background-repeat: no-repeat; width: 16px; height: 16px; }
+
+
+
+.login_link .text::after { background-position: -131px -73px; background-repeat: no-repeat; width: 16px; height: 16px; }
+
+
+
+.notice_box::before { background-position: -89px -101px; background-repeat: no-repeat; width: 19px; height: 19px; }
+
+
+
+.subtitle .onetime_desc .bullet_arrow { filter: grayscale(100%); background-position: -131px -51px; background-repeat: no-repeat; width: 16px; height: 16px; }
+
+
+
+.icon_forward_nexon { background-position: -33px -101px; background-repeat: no-repeat; width: 24px; height: 24px; }
+
+
+
+.another_id::before { background-position: -131px -27px; background-repeat: no-repeat; width: 18px; height: 18px; }
+
+
+
+.captcha_voice .img_voice { background-position: -3px -3px; background-repeat: no-repeat; width: 50px; height: 50px; }
+
+
+
+.btn_captcha_refresh::after { background-position: -101px -63px; background-repeat: no-repeat; width: 24px; height: 24px; }
+
+
+
+.btn_captcha_voice::after { background-position: -101px -3px; background-repeat: no-repeat; width: 24px; height: 24px; }
+
+
+
+.btn_captcha_image::after { background-position: -101px -33px; background-repeat: no-repeat; width: 24px; height: 24px; }
+
+
+
+.dual_item.passkey .btn_done .text::before { background-position: -63px -101px; background-repeat: no-repeat; width: 20px; height: 20px; }

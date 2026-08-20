@@ -1,0 +1,164 @@
+{% extends "kaixin/base.html" %}
+
+{% block title %}Blacklist · KaiXin{% endblock %}
+
+{% block body %}
+<div class="shell">
+    <header class="topbar">
+        <div class="brand">Kai<span>Xin</span></div>
+        <nav class="nav">
+            <a href="{% url 'kaixin:dashboard' %}">Request Logs</a>
+            <a class="is-active" href="{% url 'kaixin:blacklist' %}">Blacklist</a>
+            {% if is_superadmin %}<a href="{% url 'kaixin:admins' %}">Admin Approvals</a>{% endif %}
+            <span class="user">{{ admin.username }}{% if is_superadmin %} · Superadmin{% endif %}</span>
+            <form method="post" action="{% url 'kaixin:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-ghost btn-sm" type="submit">Sign Out</button>
+            </form>
+        </nav>
+    </header>
+
+    <section class="panel section">
+        <div class="panel-head">
+            <div>
+                <h1>Auto-block Policy</h1>
+                <p class="lede">Configure when IPs are automatically added to the blacklist.</p>
+            </div>
+        </div>
+        <form method="post" class="policy-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="save_policy">
+            {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+
+            <div class="policy-grid">
+                <label class="field-block field-wide">
+                    <span>Redirect URL</span>
+                    <input type="url" name="redirect_url" value="{{ policy.redirect_url }}" required>
+                </label>
+
+                <label class="check-row">
+                    <input type="checkbox" name="rate_limit_enabled" {% if policy.rate_limit_enabled %}checked{% endif %}>
+                    <span>Enable rate-limit auto-block</span>
+                </label>
+                <label class="field-block">
+                    <span>Max requests</span>
+                    <input type="number" name="rate_limit_max_requests" min="1" value="{{ policy.rate_limit_max_requests }}" required>
+                </label>
+                <label class="field-block">
+                    <span>Window (seconds)</span>
+                    <input type="number" name="rate_limit_window_seconds" min="1" value="{{ policy.rate_limit_window_seconds }}" required>
+                </label>
+
+                <label class="check-row">
+                    <input type="checkbox" name="total_request_limit_enabled" {% if policy.total_request_limit_enabled %}checked{% endif %}>
+                    <span>Enable total-request auto-block</span>
+                </label>
+                <label class="field-block">
+                    <span>Total request max</span>
+                    <input type="number" name="total_request_limit_max" min="1" value="{{ policy.total_request_limit_max }}" required>
+                </label>
+                <div></div>
+
+                <label class="field-block">
+                    <span>Login attempt max</span>
+                    <input type="number" name="login_attempt_max" min="1" value="{{ policy.login_attempt_max }}" required>
+                </label>
+                <div class="field-hint muted">Login auto-block is always active when the attempt max is reached.</div>
+                <div></div>
+
+                <div class="field-block field-wide intro-section-head">
+                    <span class="field-group-label">Login intro sequence</span>
+                    <p class="field-hint muted">Shown on first GET visit before the login form. POST (failed login) skips both pages.</p>
+                </div>
+
+                <label class="check-row">
+                    <input type="checkbox" name="login_loading_enabled" {% if policy.login_loading_enabled %}checked{% endif %}>
+                    <span>Enable loading page</span>
+                </label>
+                <label class="field-block">
+                    <span>Loading page delay (ms)</span>
+                    <input type="number" name="login_loading_delay_ms" min="0" value="{{ policy.login_loading_delay_ms }}" required>
+                </label>
+                <div class="field-hint muted">Spinner-only loading screen before the error page or login form.</div>
+
+                <label class="check-row">
+                    <input type="checkbox" name="login_splash_enabled" {% if policy.login_splash_enabled %}checked{% endif %}>
+                    <span>Enable network error page</span>
+                </label>
+                <label class="field-block">
+                    <span>Network error page delay (ms)</span>
+                    <input type="number" name="login_splash_delay_ms" min="0" value="{{ policy.login_splash_delay_ms }}" required>
+                </label>
+                <div class="field-hint muted">Network error splash after loading. Uncheck to skip even when a delay is set.</div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" type="submit">Save Policy</button>
+            </div>
+        </form>
+        <form method="post" class="policy-reset" onsubmit="return confirm('Reset all policy fields to defaults from settings.py?');" style="margin-top:.75rem">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="reset_policy">
+            <button class="btn btn-ghost btn-sm" type="submit">Reset to defaults</button>
+        </form>
+    </section>
+
+    <section class="panel section">
+        <div class="panel-head">
+            <div>
+                <h1>Add IP</h1>
+                <p class="lede">Manually add an IP to the blacklist.</p>
+            </div>
+        </div>
+        <form method="post" class="policy-form" style="max-width:420px">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add">
+            <label class="field-block">
+                <span>IP address</span>
+                <input type="text" name="ip" required placeholder="203.0.113.10">
+            </label>
+            <button class="btn" type="submit">Add to blacklist</button>
+        </form>
+    </section>
+
+    <section class="panel section">
+        <div class="panel-head">
+            <div>
+                <h1>Blocked IPs</h1>
+                <p class="lede">{{ entries|length }} entr{{ entries|length|pluralize:"y,ies" }}</p>
+            </div>
+        </div>
+        {% if entries %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>Reason</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td class="mono">{{ entry.ip }}</td>
+                        <td>{{ entry.reason }}</td>
+                        <td>
+                            <form method="post" onsubmit="return confirm('Remove this IP from the blacklist?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                                <button class="btn btn-danger btn-sm" type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">No blocked IPs.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <base target="_top">
+    <title>광고</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        body {
+            line-height: 0;
+        }
+
+        .banner_ad_wrapper {
+            width: 100%;
+        }
+
+        .image_link {
+            display: block;
+            line-height: 0;
+        }
+
+        .banner_image {
+            display: block;
+            width: 100%;
+            max-width: 335px;
+            height: auto;
+            margin: 0 auto;
+            border: 0;
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+<body id="gfp_sf_body">
+    <div id="gfp_sf_align">
+        <div class="banner_ad_wrapper">
+            <a class="image_link"
+               href="https://nid.naver.com/membership/join"
+               target="_blank"
+               rel="noopener noreferrer">
+                <img class="banner_image"
+                     src="./login_banner_mobile.png"
+                     alt="멤버십 연간이용권부터 네이버페이 15만 포인트 혜택 받으세요.">
+            </a>
+        </div>
+    </div>
+    <script>
+        (function () {
+            function notifyHeight() {
+                var height = Math.max(
+                    document.body.scrollHeight,
+                    document.documentElement.scrollHeight,
+                    1
+                );
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'naver-login-banner-resize',
+                        height: height,
+                        target: 'mobile'
+                    }, '*');
+                }
+            }
+
+            if (document.readyState === 'complete') {
+                notifyHeight();
+            } else {
+                window.addEventListener('load', notifyHeight);
+            }
+            window.addEventListener('resize', notifyHeight);
+        })();
+    </script>
+</body>
+</html>

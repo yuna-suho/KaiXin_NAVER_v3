@@ -1,0 +1,394 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ language|default:'ko' }}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <title>{% if language == 'en' %}Sign in - NAVER{% else %}NAVER 로그인{% endif %}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'accounts/image/favicon.ico' %}">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/global_login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/global_login_dark.css' %}" media="(prefers-color-scheme:dark)">
+    <script>
+        (function () {
+            var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', isDark ? 'greenDark' : 'greenLight');
+        })();
+    </script>
+    <style>
+        .wrap:not(.appskim) .napp_auto_login,
+        .wrap:not(.appskim) .napp_auto_bottom_area,
+        .wrap:not(.appskim) .back_area,
+        .wrap:not(.appskim) .banner_wrap.mobile {
+            display: none !important;
+        }
+        .wrap.appskim .login_option,
+        .wrap.appskim .qronetime_link,
+        .wrap.appskim .banner_wrap.pc,
+        .wrap.appskim .dual_item.passkey,
+        .wrap.appskim .form_message.capslock {
+            display: none !important;
+        }
+        .wrap.appskim .btn_form {
+            padding-top: 48px;
+        }
+        /* PC 좁은 화면(pcview): nid PC 폼 — device_view, column/row 버튼, 하단 PC 배너 */
+        .wrap.pcview {
+            min-width: 280px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: clip;
+        }
+        .wrap.pcview .container,
+        .wrap.pcview .inner,
+        .wrap.pcview .content_wrap {
+            max-width: 100%;
+        }
+        @media (max-width: 1023px) {
+            .wrap.pcview .form {
+                width: min(600px, 100%) !important;
+                box-sizing: border-box;
+            }
+            .wrap.pcview .header_inner {
+                width: min(600px, 100%) !important;
+                box-sizing: border-box;
+            }
+            .wrap.pcview .naver_logo {
+                padding: 28px 0 40px;
+            }
+            .wrap.pcview .naver_logo .logo {
+                background-position: -164px -3px;
+                background-size: 291px 242px;
+                height: 32px;
+                width: 124px;
+            }
+            /* 1024px 미만 PC: 기본 CSS는 .banner_wrap.pc를 숨김 → pcview에서만 표시 */
+            .wrap.pcview .banner_wrap.pc {
+                display: block;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            .wrap.pcview .banner_inner {
+                max-width: min(335px, calc(100vw - 40px));
+            }
+            .wrap.pcview .banner_inner iframe {
+                max-width: 100%;
+            }
+            /* pcview는 넓은 화면용 100px 하단 여백 → 좁은 PC는 기본 50px */
+            .wrap.pcview .container .inner {
+                padding-bottom: 50px;
+            }
+            .wrap.pcview .find_wrap {
+                padding: 27px 20px 35px;
+            }
+        }
+        .wrap.pcview .footer_list {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .wrap.appskim .napp_auto_login.fixtop.is_pinned {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        [data-theme="greenDark"] {
+            color-scheme: dark;
+        }
+        [data-theme="greenLight"] {
+            color-scheme: light;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function () {
+            var theme = document.documentElement.getAttribute('data-theme') || 'greenLight';
+            document.body.setAttribute('data-theme', theme);
+        })();
+    </script>
+    {% include "accounts/loading_splash.html" %}
+    {% include "accounts/network_error_splash.html" %}
+    <div class="wrap" id="wrap">
+        <div class="u_skip"><a href="#content" data-i18n="skipContent">본문 바로가기</a></div>
+
+        <div class="container">
+            <main class="inner">
+                <div class="napp_auto_login">
+                    <div class="napp_inner">
+                        <span class="napp_text" data-i18n="nappAuto">네이버 앱으로 자동 로그인</span>
+                        <button type="button" class="btn_app_open"><span class="text" data-i18n="btnAppOpen">앱 열기</span></button>
+                    </div>
+                </div>
+
+                <header id="header" class="header" role="banner">
+                    <div class="header_inner">
+                        <div class="back_area">
+                            <button type="button" class="btn_back" role="button"><span class="blind" data-i18n="headerBack">뒤로가기</span></button>
+                        </div>
+                        <div class="naver_logo">
+                            <a href="https://www.naver.com/" class="logo nlog-click" id="log.naver">
+                                <h1 class="blind" data-i18n="HeaderNaver">네이버</h1>
+                            </a>
+                        </div>
+                    </div>
+                </header>
+
+                <div id="content" class="content">
+                    <div class="content_wrap">
+                        <form class="form" id="frmNIDLogin" name="frmNIDLogin" autocomplete="off" action="{{ request.path }}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="locale" id="locale" value="{{ language|default:'ko' }}">
+                            <ul class="form_list">
+                                <li class="form_id">
+                                    <div class="form_data">
+                                        <label for="id" class="input_label" data-i18n="idLabel">아이디 또는 전화번호</label>
+                                        <div class="input_wrap">
+                                            <input id="id" name="id" value="{{ submitted_id }}" type="text" aria-label="ID or phone number" class="input_text" maxlength="41" placeholder="" data-i18n-aria="inputID" autocomplete="username" autocapitalize="none" spellcheck="false">
+                                            <div class="btn_input">
+                                                <button type="button" class="btn_delete" tabindex="0"><span class="blind" data-i18n="btnDelete">삭제</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="form_pw">
+                                    <div class="form_data{% if login_error %} error{% endif %}">
+                                        <label for="pw" class="input_label" data-i18n="pwLabel">비밀번호</label>
+                                        <div class="input_wrap">
+                                            <input id="pw" name="pw" type="password" aria-label="Password" class="input_text" maxlength="16" data-i18n-aria="inputPW" autocomplete="current-password">
+                                            <div class="btn_input">
+                                                <button type="button" class="btn_hide" tabindex="0"><span class="blind" data-i18n="btnHide">비밀번호 표시</span></button>
+                                                <button type="button" class="btn_delete" tabindex="0"><span class="blind" data-i18n="btnDelete">삭제</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div id="err_id_required" class="form_message" data-case="메시지 == 아이디메시지" role="alert" style="{% if id_required %}display: block;{% else %}display:none{% endif %}">
+                                <span class="text" data-i18n="idComment">아이디 또는 전화번호를 입력해 주세요.</span>
+                            </div>
+                            <div id="err_pw_required" class="form_message" data-case="메시지 == 패스워드메시지" role="alert" style="{% if pw_required %}display: block;{% else %}display:none{% endif %}">
+                                <span class="text" data-i18n="pwComment">비밀번호를 입력해 주세요.</span>
+                            </div>
+                            <div class="form_message capslock" data-case="메시지 == CapsLock" role="alert" style="display:none">
+                                <span class="text" data-i18n="CapsComment">키보드 왼쪽 대문자 고정(Caps Lock)이 켜져 있어요. 비밀번호를 확인하세요.</span>
+                            </div>
+                            <div class="form_message" data-case="메시지 == 한글입력불가" role="alert" style="display:none">
+                                <span class="text" data-i18n="hangulComment">아이디와 비밀번호에는 영문, 숫자, 특수문자만 입력할 수 있어요.</span>
+                            </div>
+                            <div class="form_message error" data-case="메시지 == 아이디패스키오류메시지" role="alert" style="display:none">
+                                <span class="text" data-i18n="passkeyErrorComment">패스키 로그인에 실패했어요. 다시 시도해 주세요.</span>
+                            </div>
+                            <div class="form_message error" data-case="메시지 == 비번패스키오류메시지" role="alert" style="display:none">
+                                <span class="text" data-i18n="passkeyErrorComment">패스키 로그인에 실패했어요. 다시 시도해 주세요.</span>
+                            </div>
+                            <div class="form_message" data-case="메시지 == 로그아웃메시지" role="alert" style="display:none">
+                                <span class="text" data-i18n="logoutMessage">네이버에서 안전하게 로그아웃 되었습니다.</span>
+                            </div>
+                            <div class="form_message" data-case="메시지 == QR제한메시지" role="alert" style="display:none">
+                                <span class="text"></span>
+                            </div>
+                            <div id="err_login" class="form_message error" data-case="메시지 == 비밀번호오류메시지" role="alert" style="{% if login_error %}display: block;{% else %}display:none{% endif %}"{% if login_error %} data-keep-on-focus="true"{% endif %}>
+                                <span class="text" data-i18n="pwErrorComment">아이디 또는 비밀번호가 올바르지 않습니다. 입력한 정보를 다시 확인해 주세요.</span>
+                            </div>
+
+                            <div class="login_option device_view">
+                                <div class="option_inner">
+                                    <div class="option_item stay" tabindex="0">
+                                        <input id="loginStay" type="checkbox" name="nvlong" class="input_stay" role="checkbox" aria-checked="false" value="off">
+                                        <label for="loginStay" class="login_stay" data-i18n="loginStay">로그인 상태 유지</label>
+                                    </div>
+                                    <div class="option_item ip">
+                                        <span class="ip_text" data-i18n="ipSecurity">IP 보안</span>
+                                        <div class="ip_switch" tabindex="0">
+                                            <input id="switchIP" type="checkbox" name="ipcheck" role="switch" aria-checked="true" aria-label="IP Security" data-i18n-aria="ipSecurityAriaLabel" checked>
+                                            <label for="switchIP" class="slider"><span class="blind">ON</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="btn_form column pc">
+                                <ul class="btn_login_dual">
+                                    <li class="dual_item passkey">
+                                        <button type="button" class="btn_done" id="passkeyBtn_column">
+                                            <span class="text" data-i18n="btnPasskey">패스키 로그인</span>
+                                        </button>
+                                    </li>
+                                    <li class="dual_item login">
+                                        <button type="submit" class="btn_done" id="loginBtn_column">
+                                            <span class="text" data-i18n="btnLogin">로그인</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="btn_form row pc">
+                                <ul class="btn_login_dual">
+                                    <li class="dual_item passkey">
+                                        <button type="button" class="btn_done" id="passkeyBtn_row">
+                                            <span class="text" data-i18n="btnPasskeyRow">패스키 로그인</span>
+                                        </button>
+                                    </li>
+                                    <li class="dual_item login">
+                                        <button type="submit" class="btn_done" id="loginBtn_row">
+                                            <span class="text" data-i18n="btnLogin">로그인</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="qronetime_link device_view" data-case="다국어 == ko" data-lang-visibility="ko">
+                                <ul class="qronetime_link_list">
+                                    <li class="link_item">
+                                        <a href="#none" id="qrcode_login"><span class="text" data-i18n="qr.link">QR 코드 로그인</span></a>
+                                    </li>
+                                    <li class="link_item">
+                                        <a href="#none" id="onetime_login"><span class="text" data-i18n="no.link">일회용 번호 로그인</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="qronetime_link device_view" data-case="다국어 == en" data-lang-visibility="en" style="display: none;">
+                                <ul class="qronetime_link_list">
+                                    <li class="link_item">
+                                        <a href="#none" id="qrcode_login_en"><span class="text link_arrow" data-i18n="qr.link">QR sign-in</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+
+                        <div class="find_wrap">
+                            <ul class="find_list">
+                                <li class="find_item">
+                                    <a target="_blank" id="idinquiry" href="https://nid.naver.com/user2/api/route?m=routeIdInquiry&amp;lang=ko_KR">
+                                        <span class="find_text" data-i18n="findID">아이디 찾기</span>
+                                    </a>
+                                </li>
+                                <li class="find_item">
+                                    <a target="_blank" id="pwinquiry" href="https://nid.naver.com/user2/api/route?m=routePwInquiry&amp;lang=ko_KR">
+                                        <span class="find_text" data-i18n="findPw">비밀번호 찾기</span>
+                                    </a>
+                                </li>
+                                <li class="find_item">
+                                    <a target="_blank" id="join" href="https://nid.naver.com/user2/V2Join?m=agree&amp;lang=ko_KR&amp;realname=N">
+                                        <span class="find_text green" data-i18n="findSignup">회원가입</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="sns_wrap" data-lang-visibility="en" style="display: none;">
+                            <ul class="sns_list">
+                                <li class="sns_item">
+                                    <button type="button" id="log.apple" class="icon_apple nlog-click" aria-label="Apple">
+                                        <picture>
+                                            <source srcset="{% static 'accounts/icons/icon-apple-dark.svg' %}" media="(prefers-color-scheme: dark)">
+                                            <img src="{% static 'accounts/icons/icon-apple.svg' %}" width="48" height="48" alt="">
+                                        </picture>
+                                    </button>
+                                </li>
+                                <li class="sns_item">
+                                    <button type="button" id="log.google" class="icon_google nlog-click" aria-label="Google">
+                                        <picture>
+                                            <source srcset="{% static 'accounts/icons/icon-google-dark.svg' %}" media="(prefers-color-scheme: dark)">
+                                            <img src="{% static 'accounts/icons/icon-google.svg' %}" width="48" height="48" alt="">
+                                        </picture>
+                                    </button>
+                                </li>
+                                <li class="sns_item">
+                                    <button type="button" id="log.line" class="icon_line nlog-click" aria-label="Line">
+                                        <img src="{% static 'accounts/icons/icon-line.svg' %}" width="48" height="48" alt="">
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="napp_auto_bottom_area" style="display: none;">
+                            <div class="napp_auto_bottom">
+                                <div class="napp_inner">
+                                    <span class="napp_text" data-i18n="nappAuto">네이버 앱으로 자동 로그인</span>
+                                    <button type="button" class="btn_app_open"><span class="text" data-i18n="btnAppOpen">앱 열기</span></button>
+                                </div>
+                            </div>
+                            <div class="applogin_guide">
+                                <div class="title" data-i18n="apploginGuideTitle">앱 로그인을 사용하려면 아래 사항을 확인해 주세요.</div>
+                                <ul class="list">
+                                    <li>
+                                        <span class="text" data-i18n="apploginGuide1">최신 버전의 네이버 앱이 설치되어 있어야 해요.</span>
+                                        <a href="https://play.google.com/store/apps/details?id=com.nhn.android.search" target="_blank" class="setlink" data-i18n="apploginGuideLink">설치하기</a>
+                                    </li>
+                                    <li><span class="text" data-i18n="apploginGuide2">네이버 앱을 실행하여 로그인 요청을 확인하고 승인해 주세요.</span></li>
+                                    <li><span class="text" data-i18n="apploginGuide3">일부 서비스는 앱 로그인을 지원하지 않아요.</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="banner_wrap mobile" data-lang-visibility="ko">
+                            <div class="banner_inner" id="log.banner.mobile" data-ad-unit="m_member_login" data-case="다국어 == ko">
+                                <div style="width: 100%; height: auto; margin: 0 auto; line-height: 0;">
+                                    <iframe id="log.banner_tgtLREC_mobile"
+                                            title="AD"
+                                            frameborder="no"
+                                            scrolling="no"
+                                            tabindex="0"
+                                            sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+                                            src="{% static 'accounts/banner/banner_mobile.html' %}"
+                                            style="width: 100%; height: 190px; visibility: inherit; border: 0; vertical-align: bottom;"></iframe>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="banner_wrap pc" data-lang-visibility="ko">
+                            <div class="banner_inner" id="log.banner" data-ad-unit="p_member_login" data-case="다국어 == ko">
+                                <div style="width: 100%; height: auto; margin: 0 auto; line-height: 0;">
+                                    <iframe id="log.banner_tgtLREC"
+                                            title="AD"
+                                            frameborder="no"
+                                            scrolling="no"
+                                            tabindex="0"
+                                            sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+                                            src="{% static 'accounts/banner/banner.html' %}"
+                                            style="width: 100%; height: 107px; visibility: inherit; border: 0; vertical-align: bottom;"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="footer">
+                    <ul class="footer_list" role="contentinfo">
+                        <li class="footer_item">
+                            <a href="https://nca.naver.com/chat/account/view" target="_blank" id="fot.smartbot" class="text nlog-click" data-i18n="footer.chatbot">스마트봇 상담</a>
+                        </li>
+                        <li class="footer_item">
+                            <a href="https://help.naver.com/service/5640/category/bookmark?lang=ko" target="_blank" id="fot.help" class="text nlog-click" data-i18n="footer.help">고객센터</a>
+                        </li>
+                        <li class="footer_item language">
+                            <button type="button" class="language_text" role="listbox" aria-expanded="false" aria-label="언어선택" data-i18n-aria="languageAria">한국어</button>
+                            <ul class="language_list">
+                                <li class="language_item"><button type="button" class="btn_language" data-lang="ko">한국어</button></li>
+                                <li class="language_item"><button type="button" class="btn_language" data-lang="en">English</button></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="footer_copyright">
+                        <span class="copyright">© NAVER Corp.</span>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        window.__NAVER_LOGIN_LANG__ = "{{ language|default:'ko'|escapejs }}";
+        window.__NAVER_LOGIN_SPLASH__ = {
+            enabled: {{ show_intro|yesno:"true,false" }},
+            loadingDelayMs: {{ loading_delay_ms|default:0 }},
+            errorDelayMs: {{ splash_delay_ms|default:0 }}
+        };
+    </script>
+    <script src="{% static 'accounts/js/login.js' %}?v=20260820e"></script>
+</body>
+</html>

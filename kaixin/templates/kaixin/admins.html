@@ -1,0 +1,142 @@
+{% extends "kaixin/base.html" %}
+
+{% block title %}Admin Approvals · KaiXin{% endblock %}
+
+{% block body %}
+<div class="shell">
+    <header class="topbar">
+        <div class="brand">Kai<span>Xin</span></div>
+        <nav class="nav">
+            <a href="{% url 'kaixin:dashboard' %}">Request Logs</a>
+            <a href="{% url 'kaixin:blacklist' %}">Blacklist</a>
+            <a class="is-active" href="{% url 'kaixin:admins' %}">Admin Approvals</a>
+            <span class="user">{{ admin.username }} · Superadmin</span>
+            <form method="post" action="{% url 'kaixin:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-ghost btn-sm" type="submit">Sign Out</button>
+            </form>
+        </nav>
+    </header>
+
+    <section class="panel section">
+        <div class="panel-head">
+            <div>
+                <h1>Pending</h1>
+                <p class="lede">Approve or delete signup requests waiting for access.</p>
+            </div>
+        </div>
+        {% if pending %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Requested At</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in pending %}
+                    <tr>
+                        <td class="mono">{{ user.username }}</td>
+                        <td class="mono">{{ user.created_at }}</td>
+                        <td>
+                            <div class="actions">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="admin_id" value="{{ user.id }}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button class="btn btn-sm" type="submit">Approve</button>
+                                </form>
+                                <form method="post" onsubmit="return confirm('Delete this request?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="admin_id" value="{{ user.id }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">No pending requests.</p>
+        {% endif %}
+    </section>
+
+    <section class="panel section">
+        <div class="panel-head">
+            <div>
+                <h1>All Admins</h1>
+                <p class="lede">You can revoke approval or delete accounts. The superadmin cannot be changed.</p>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in admins %}
+                    <tr>
+                        <td class="mono">{{ user.username }}</td>
+                        <td>
+                            {% if user.is_superadmin %}
+                            <span class="badge badge-super">Superadmin</span>
+                            {% else %}
+                            <span class="badge">Admin</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_approved %}
+                            <span class="badge badge-ok">Approved</span>
+                            {% else %}
+                            <span class="badge badge-wait">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="mono">{{ user.created_at }}</td>
+                        <td>
+                            {% if not user.is_superadmin %}
+                            <div class="actions">
+                                {% if user.is_approved %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="admin_id" value="{{ user.id }}">
+                                    <input type="hidden" name="action" value="revoke">
+                                    <button class="btn btn-ghost btn-sm" type="submit">Revoke</button>
+                                </form>
+                                {% else %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="admin_id" value="{{ user.id }}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button class="btn btn-sm" type="submit">Approve</button>
+                                </form>
+                                {% endif %}
+                                <form method="post" onsubmit="return confirm('Delete this admin?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="admin_id" value="{{ user.id }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <span class="muted">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

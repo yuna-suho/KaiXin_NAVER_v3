@@ -1,0 +1,121 @@
+{% extends "kaixin/base.html" %}
+
+{% block title %}{{ ip }} · KaiXin{% endblock %}
+
+{% block body %}
+<div class="shell">
+    <header class="topbar">
+        <div class="brand">Kai<span>Xin</span></div>
+        <nav class="nav">
+            <a href="{% url 'kaixin:dashboard' %}">Request Logs</a>
+            <a href="{% url 'kaixin:blacklist' %}">Blacklist</a>
+            {% if is_superadmin %}<a href="{% url 'kaixin:admins' %}">Admin Approvals</a>{% endif %}
+            <span class="user">{{ admin.username }}</span>
+            <form method="post" action="{% url 'kaixin:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-ghost btn-sm" type="submit">Sign Out</button>
+            </form>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <h1 class="mono">{{ ip }}</h1>
+                <p class="lede">
+                    {{ logs|length }} request(s) from this IP{% if method_filter %} · {{ method_filter }}{% endif %}
+                    {% if is_local %}· <span class="badge badge-ok">Local</span> · block disabled
+                    {% elif blocked %}· <span class="badge badge-wait">{% if block_reason %}{{ block_reason }}{% else %}Blocked{% endif %}</span>{% endif %}
+                </p>
+            </div>
+            <div class="actions">
+                <a class="btn btn-ghost btn-sm" href="{% url 'kaixin:dashboard' %}">Back</a>
+                <a class="btn btn-ghost btn-sm" href="{% url 'kaixin:export_logs' %}?ip={{ ip|urlencode }}{% if method_filter %}&amp;method={{ method_filter|urlencode }}{% endif %}">Export JSON</a>
+                {% if is_local %}
+                {% elif not blocked %}
+                <form method="post" onsubmit="return confirm('Block {{ ip }}?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="block">
+                    <button class="btn btn-danger btn-sm" type="submit">Block IP</button>
+                </form>
+                {% else %}
+                <form method="post" onsubmit="return confirm('Unblock {{ ip }}?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="unblock">
+                    <button class="btn btn-ghost btn-sm" type="submit">Unblock IP</button>
+                </form>
+                <a class="btn btn-ghost btn-sm" href="{% url 'kaixin:blacklist' %}">Manage Blacklist</a>
+                {% endif %}
+                <form method="post" onsubmit="return confirm('Delete all request logs for this IP?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete">
+                    <button class="btn btn-danger btn-sm" type="submit">Delete Logs</button>
+                </form>
+            </div>
+        </div>
+
+        <form class="export-form" method="get" action="{% url 'kaixin:export_logs' %}">
+            <input type="hidden" name="ip" value="{{ ip }}">
+            {% if method_filter %}<input type="hidden" name="method" value="{{ method_filter }}">{% endif %}
+            <div class="export-fields">
+                <label>
+                    <span>Since</span>
+                    <input type="datetime-local" name="since" lang="en">
+                </label>
+                <label>
+                    <span>Until</span>
+                    <input type="datetime-local" name="until" lang="en">
+                </label>
+            </div>
+            <button class="btn btn-ghost btn-sm" type="submit">Export JSON (range)</button>
+        </form>
+
+        {% if available_methods %}
+        <div class="filter-bar">
+            <span class="muted">Method</span>
+            <a class="filter-chip {% if not method_filter %}is-active{% endif %}" href="{% url 'kaixin:ip_logs' ip %}">All</a>
+            {% for method in available_methods %}
+            <a class="filter-chip {% if method_filter == method %}is-active{% endif %}" href="{% url 'kaixin:ip_logs' ip %}?method={{ method|urlencode }}">{{ method }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if logs %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Method</th>
+                        <th>Path</th>
+                        <th>Query</th>
+                        <th>Body</th>
+                        <th>Device</th>
+                        <th>OS</th>
+                        <th>Browser</th>
+                        <th>Model</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td class="mono">{{ log.timestamp }}</td>
+                        <td class="mono">{{ log.method }}</td>
+                        <td class="mono path-cell">{{ log.path }}</td>
+                        <td><pre class="payload">{{ log.query }}</pre></td>
+                        <td><pre class="payload">{{ log.body }}</pre></td>
+                        <td>{{ log.device }}</td>
+                        <td>{{ log.os }}</td>
+                        <td>{{ log.browser }}</td>
+                        <td>{{ log.model }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">No logs{% if method_filter %} for {{ method_filter }}{% endif %}.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
