@@ -4,6 +4,7 @@
     z-index: 10000;
     overflow: hidden;
     background: rgb(245, 246, 247);
+    color-scheme: light;
 }
 
 .network-error-splash.is-hidden {
@@ -154,33 +155,5 @@
     .network-error-splash .ne-logo {
         background-image: url("../sprite/pc_sp_login_170424.png");
         background-size: 460px auto;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    .network-error-splash {
-        background: rgb(23, 24, 26);
-        color-scheme: dark;
-    }
-
-    .network-error-splash .ne-warning-title h2 {
-        color: rgb(232, 232, 232);
-    }
-
-    .network-error-splash .ne-footer address {
-        color: rgb(170, 170, 170);
-    }
-
-    .network-error-splash .ne-footer address a {
-        color: rgb(200, 200, 200);
-    }
-
-    .network-error-splash .ne-footer address a:hover {
-        color: rgb(3, 199, 90);
-    }
-
-    .network-error-splash .ne-footer .ne-u-cra,
-    .network-error-splash .ne-footer .ne-all-r {
-        color: rgb(140, 140, 140);
     }
 }

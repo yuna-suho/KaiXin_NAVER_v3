@@ -76,8 +76,3 @@ html.login-intro-active body {
         width: 100%;
     }
 }
-
-[data-theme="greenDark"] .login-loading-splash {
-    background: rgb(23, 24, 26);
-    color-scheme: dark;
-}
