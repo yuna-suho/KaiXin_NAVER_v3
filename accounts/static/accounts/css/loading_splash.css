@@ -2,32 +2,49 @@
     position: fixed;
     inset: 0;
     z-index: 10001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: rgb(245, 246, 247);
     color-scheme: light;
+    pointer-events: all;
+    overflow: hidden;
+}
+
+html.login-intro-active,
+html.login-intro-active body {
+    overflow: hidden;
+    height: 100%;
+}
+
+html.login-intro-active body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
 }
 
 .login-loading-splash.is-hidden {
     display: none;
 }
 
-.login-loading-splash .ll-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.login-loading-splash .ll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 10002;
+    overflow: hidden;
+    pointer-events: none;
 }
 
-.login-loading-splash .ll-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(3, 199, 90, 0.2);
-    border-top-color: #03c75a;
-    border-radius: 50%;
-    animation: ll-spin 0.8s linear infinite;
-    flex-shrink: 0;
+.login-loading-splash .ll-progress-bar {
+    height: 100%;
+    width: 0;
+    background: #03c75a;
+    opacity: 0;
+}
+
+.login-loading-splash.is-progress-active .ll-progress-bar {
+    opacity: 1;
+    animation: ll-naver-progress var(--ll-progress-duration, 1650ms) cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 
 .login-loading-splash .ll-blind {
@@ -39,9 +56,24 @@
     overflow: hidden !important;
 }
 
-@keyframes ll-spin {
-    to {
-        transform: rotate(360deg);
+@keyframes ll-naver-progress {
+    0% {
+        width: 0%;
+    }
+    18% {
+        width: 28%;
+    }
+    45% {
+        width: 56%;
+    }
+    72% {
+        width: 78%;
+    }
+    92% {
+        width: 92%;
+    }
+    100% {
+        width: 100%;
     }
 }
 

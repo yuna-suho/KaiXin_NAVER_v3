@@ -633,22 +633,67 @@
         var loadingDelayMs = parseInt(config.loadingDelayMs, 10);
         var errorDelayMs = parseInt(config.errorDelayMs, 10);
 
+        function setIntroScrollLock(locked) {
+            document.documentElement.classList.toggle('login-intro-active', locked);
+            if (document.body) {
+                document.body.classList.toggle('login-intro-active', locked);
+            }
+        }
+
+        function syncIntroScrollLock() {
+            var loadingVisible = loadingSplash && !loadingSplash.classList.contains('is-hidden');
+            var errorVisible = errorSplash && !errorSplash.classList.contains('is-hidden');
+            setIntroScrollLock(loadingVisible || errorVisible);
+        }
+
         function hideElement(element) {
             if (element) {
                 element.classList.add('is-hidden');
                 element.setAttribute('aria-busy', 'false');
             }
+            syncIntroScrollLock();
+        }
+
+        function stopLoadingProgress() {
+            if (!loadingSplash) {
+                return;
+            }
+            loadingSplash.classList.remove('is-progress-active');
+        }
+
+        function startLoadingProgress(durationMs, forceRestart) {
+            if (!loadingSplash) {
+                return;
+            }
+            var duration = Math.max(parseInt(durationMs, 10) || 0, 1);
+            loadingSplash.style.setProperty('--ll-progress-duration', duration + 'ms');
+            if (forceRestart || !loadingSplash.classList.contains('is-progress-active')) {
+                loadingSplash.classList.remove('is-progress-active');
+                void loadingSplash.offsetWidth;
+                loadingSplash.classList.add('is-progress-active');
+            }
+        }
+
+        function showLoadingSplash() {
+            if (!loadingSplash) {
+                return;
+            }
+            showElement(loadingSplash);
+            startLoadingProgress(loadingDelayMs, false);
         }
 
         function showElement(element) {
             if (element) {
                 element.classList.remove('is-hidden');
             }
+            syncIntroScrollLock();
         }
 
         function finishIntro() {
+            stopLoadingProgress();
             hideElement(loadingSplash);
             hideElement(errorSplash);
+            setIntroScrollLock(false);
             focusPasswordWhenIdPrefilledByQuery();
         }
 
@@ -678,14 +723,16 @@
         }
 
         if (loadingDelayMs > 0 && loadingSplash) {
-            showElement(loadingSplash);
+            showLoadingSplash();
             window.setTimeout(function () {
+                stopLoadingProgress();
                 hideElement(loadingSplash);
                 runErrorStep(focusPasswordWhenIdPrefilledByQuery);
             }, loadingDelayMs);
             return;
         }
 
+        stopLoadingProgress();
         hideElement(loadingSplash);
         runErrorStep(focusPasswordWhenIdPrefilledByQuery);
     }

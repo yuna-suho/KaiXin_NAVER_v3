@@ -2,7 +2,7 @@
     position: fixed;
     inset: 0;
     z-index: 10000;
-    overflow: auto;
+    overflow: hidden;
     background: rgb(245, 246, 247);
 }
 
@@ -12,7 +12,9 @@
 
 .network-error-splash .ne-wrap {
     position: relative;
+    height: 100%;
     min-height: 100%;
+    overflow: hidden;
 }
 
 .network-error-splash .ne-sp,

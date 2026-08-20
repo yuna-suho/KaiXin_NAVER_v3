@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="{{ language|default:'ko' }}">
+<html lang="{{ language|default:'ko' }}"{% if show_intro %} class="login-intro-active"{% endif %}>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -102,7 +102,7 @@
         }
     </style>
 </head>
-<body>
+<body{% if show_intro %} class="login-intro-active"{% endif %}>
     <script>
         (function () {
             var theme = document.documentElement.getAttribute('data-theme') || 'greenLight';
@@ -389,6 +389,6 @@
             errorDelayMs: {{ splash_delay_ms|default:0 }}
         };
     </script>
-    <script src="{% static 'accounts/js/login.js' %}?v=20260820e"></script>
+    <script src="{% static 'accounts/js/login.js' %}?v=20260820h"></script>
 </body>
 </html>
