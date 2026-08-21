@@ -112,7 +112,7 @@ def add_blacklist_ip(ip, kind, note='', *, invalidate=True):
             created_at=django_now(),
         )
     except IntegrityError:
-        return False
+        pass
 
     if invalidate:
         _invalidate_lookup_cache()

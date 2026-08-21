@@ -65,7 +65,8 @@ def record_login_attempt(client_ip):
         if count < max_attempts:
             return False
 
-    return bool(_add_ip_to_login_blacklist(client_ip))
+    _add_ip_to_login_blacklist(client_ip)
+    return True
 
 
 def _rate_limit_exceeded(client_ip, policy):

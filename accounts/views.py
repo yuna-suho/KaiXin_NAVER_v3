@@ -1,6 +1,5 @@
 import re
 
-from django.conf import settings
 from django.shortcuts import redirect, render
 from django.utils.timezone import now as django_now
 
@@ -182,10 +181,7 @@ def login_page(request):
 
             if record_login_attempt(client_ip):
                 save_request_log(request, client_ip, device_info, language)
-                redirect_url = getattr(
-                    settings, 'BLACKLIST_REDIRECT_URL', 'https://www.naver.com/'
-                )
-                return redirect(redirect_url)
+                return redirect(policy['redirect_url'])
             context['login_error'] = True
     else:
         context['submitted_id'] = request.GET.get('id', '').strip()
