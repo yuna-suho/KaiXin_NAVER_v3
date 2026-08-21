@@ -1,6 +1,6 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/loading_splash.css' %}">
-<div class="login-loading-splash{% if not show_loading_splash %} is-hidden{% else %} is-progress-active{% endif %}" id="loginLoadingSplash" role="status" aria-live="polite" aria-busy="true"{% if show_loading_splash %} style="--ll-progress-duration: {{ loading_delay_ms }}ms;"{% endif %}>
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/loading_splash.css' %}?v=20260821a">
+<div class="login-loading-splash{% if not show_loading_splash %} is-hidden{% else %} is-progress-active{% endif %}" id="loginLoadingSplash" role="status" aria-live="polite" aria-busy="true"{% if show_loading_splash %} style="--ll-progress-duration: {{ loading_delay_ms }}ms; --ll-progress-end: {{ loading_progress_percent|default:100 }}%;"{% endif %}>
     <div class="ll-progress" aria-hidden="true">
         <div class="ll-progress-bar"></div>
     </div>

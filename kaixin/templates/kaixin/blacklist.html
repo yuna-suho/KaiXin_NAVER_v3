@@ -81,6 +81,13 @@
                 </label>
                 <div class="field-hint muted">Spinner-only loading screen before the error page or login form.</div>
 
+                <label class="field-block">
+                    <span>Loading bar max (%)</span>
+                    <input type="number" name="login_loading_progress_percent" min="1" max="100" value="{{ policy.login_loading_progress_percent }}" required>
+                </label>
+                <div class="field-hint muted">How far the top green bar fills during the loading page. 100 is full width.</div>
+                <div></div>
+
                 <label class="check-row">
                     <input type="checkbox" name="login_splash_enabled" {% if policy.login_splash_enabled %}checked{% endif %}>
                     <span>Enable network error page</span>

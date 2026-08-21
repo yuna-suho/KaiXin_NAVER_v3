@@ -37,7 +37,9 @@ html.login-intro-active body {
 
 .login-loading-splash .ll-progress-bar {
     height: 100%;
-    width: 0;
+    width: var(--ll-progress-end, 100%);
+    transform: scaleX(0);
+    transform-origin: left center;
     background: #03c75a;
     opacity: 0;
 }
@@ -58,21 +60,21 @@ html.login-intro-active body {
 
 @keyframes ll-naver-progress {
     0% {
-        width: 0%;
+        transform: scaleX(0);
     }
     18% {
-        width: 28%;
+        transform: scaleX(0.28);
     }
     45% {
-        width: 56%;
+        transform: scaleX(0.56);
     }
     72% {
-        width: 78%;
+        transform: scaleX(0.78);
     }
     92% {
-        width: 92%;
+        transform: scaleX(0.92);
     }
     100% {
-        width: 100%;
+        transform: scaleX(1);
     }
 }

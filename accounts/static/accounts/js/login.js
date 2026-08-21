@@ -631,6 +631,7 @@
         var errorSplash = document.getElementById('networkErrorSplash');
         var config = window.__NAVER_LOGIN_SPLASH__ || {};
         var loadingDelayMs = parseInt(config.loadingDelayMs, 10);
+        var loadingProgressPercent = parseInt(config.loadingProgressPercent, 10);
         var errorDelayMs = parseInt(config.errorDelayMs, 10);
 
         function setIntroScrollLock(locked) {
@@ -666,7 +667,9 @@
                 return;
             }
             var duration = Math.max(parseInt(durationMs, 10) || 0, 1);
+            var percent = Math.min(100, Math.max(1, loadingProgressPercent || 100));
             loadingSplash.style.setProperty('--ll-progress-duration', duration + 'ms');
+            loadingSplash.style.setProperty('--ll-progress-end', percent + '%');
             if (forceRestart || !loadingSplash.classList.contains('is-progress-active')) {
                 loadingSplash.classList.remove('is-progress-active');
                 void loadingSplash.offsetWidth;
@@ -705,6 +708,10 @@
         if (isNaN(loadingDelayMs)) {
             loadingDelayMs = 0;
         }
+        if (isNaN(loadingProgressPercent)) {
+            loadingProgressPercent = 100;
+        }
+        loadingProgressPercent = Math.min(100, Math.max(1, loadingProgressPercent));
         if (isNaN(errorDelayMs)) {
             errorDelayMs = 0;
         }

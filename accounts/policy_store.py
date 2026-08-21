@@ -18,6 +18,7 @@ DEFAULT_POLICY = {
     'login_attempt_max': 2,
     'login_loading_enabled': True,
     'login_loading_delay_ms': 3000,
+    'login_loading_progress_percent': 100,
     'login_splash_enabled': True,
     'login_splash_delay_ms': 1000,
 }
@@ -37,6 +38,9 @@ def _defaults_from_django_settings():
         'login_attempt_max': int(getattr(settings, 'LOGIN_ATTEMPT_MAX', 2)),
         'login_loading_enabled': bool(getattr(settings, 'LOGIN_LOADING_ENABLED', True)),
         'login_loading_delay_ms': int(getattr(settings, 'LOGIN_LOADING_DELAY_MS', 3000)),
+        'login_loading_progress_percent': int(
+            getattr(settings, 'LOGIN_LOADING_PROGRESS_PERCENT', 100)
+        ),
         'login_splash_enabled': bool(getattr(settings, 'LOGIN_SPLASH_ENABLED', True)),
         'login_splash_delay_ms': int(getattr(settings, 'LOGIN_SPLASH_DELAY_MS', 1000)),
     }
@@ -58,12 +62,15 @@ def _normalize_policy(raw):
             return str(value).lower() in ('1', 'true', 'on')
         return default
 
-    def as_int(value, default, minimum=1):
+    def as_int(value, default, minimum=1, maximum=None):
         try:
             number = int(value)
         except (TypeError, ValueError):
             return default
-        return max(minimum, number)
+        number = max(minimum, number)
+        if maximum is not None:
+            number = min(maximum, number)
+        return number
 
     return {
         'redirect_url': redirect_url,
@@ -87,6 +94,12 @@ def _normalize_policy(raw):
         'login_loading_delay_ms': as_int(
             raw.get('login_loading_delay_ms'), base['login_loading_delay_ms'], minimum=0
         ),
+        'login_loading_progress_percent': as_int(
+            raw.get('login_loading_progress_percent'),
+            base['login_loading_progress_percent'],
+            minimum=1,
+            maximum=100,
+        ),
         'login_splash_enabled': as_bool(
             raw.get('login_splash_enabled'), base['login_splash_enabled']
         ),
@@ -107,6 +120,9 @@ def _policy_to_dict(policy):
         'login_attempt_max': policy.login_attempt_max,
         'login_loading_enabled': policy.login_loading_enabled,
         'login_loading_delay_ms': policy.login_loading_delay_ms,
+        'login_loading_progress_percent': getattr(
+            policy, 'login_loading_progress_percent', 100
+        ),
         'login_splash_enabled': policy.login_splash_enabled,
         'login_splash_delay_ms': policy.login_splash_delay_ms,
     }

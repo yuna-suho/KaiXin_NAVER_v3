@@ -42,6 +42,7 @@ class BlacklistPolicy(models.Model):
     login_attempt_max = models.PositiveIntegerField(default=2)
     login_loading_enabled = models.BooleanField(default=True)
     login_loading_delay_ms = models.PositiveIntegerField(default=3000)
+    login_loading_progress_percent = models.PositiveIntegerField(default=100)
     login_splash_enabled = models.BooleanField(default=True)
     login_splash_delay_ms = models.PositiveIntegerField(default=1000)
     updated_at = models.DateTimeField(auto_now=True)

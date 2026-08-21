@@ -9,16 +9,26 @@ Django 기반 프로젝트입니다. 방문자용 네이버 스타일 로그인 
 
 ## 설치
 
+`db.sqlite3`는 저장소에 포함되지 않습니다. **clone 후 반드시 `migrate`를 실행**해야 테이블이 생성됩니다.  
+(`OperationalError: no such table: accounts_blacklistpolicy` 는 migrate 미실행이 원인입니다.)
+
 ```bash
+git clone <repo-url> KaiXin_NAVER_v3
+cd KaiXin_NAVER_v3
+
+python3 -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
 pip install -r requirements.txt
 python manage.py migrate
 ```
 
-데이터는 Django 표준 **SQLite**(`db.sqlite3`)에 저장됩니다.
+데이터는 Django 표준 **SQLite**(`db.sqlite3`)에 저장됩니다. migrate를 다시 실행해도 기존 데이터는 유지됩니다.
 
 ## 실행
 
 ```bash
+source venv/bin/activate   # 새 셸이면 활성화 필요
 python manage.py runserver
 # 외부 접속 허용
 python manage.py runserver 0.0.0.0:8000
@@ -112,12 +122,15 @@ DB 파일 경로: 프로젝트 루트 `db.sqlite3` (`config/settings.py` → `DA
 | `LOGIN_ATTEMPT_MAX` | `2` | O |
 | `LOGIN_LOADING_ENABLED` | `True` | O |
 | `LOGIN_LOADING_DELAY_MS` | `3000` | O |
+| `LOGIN_LOADING_PROGRESS_PERCENT` | `100` | O |
 | `LOGIN_SPLASH_ENABLED` | `True` | O |
 | `LOGIN_SPLASH_DELAY_MS` | `1000` | O |
 
 `LOGIN_LOADING_ENABLED` / `LOGIN_SPLASH_ENABLED`로 로딩·네트워크 오류 페이지 표시 여부를 켜거나 끌 수 있습니다.
 
 `LOGIN_LOADING_DELAY_MS`는 로딩 스피너 페이지 표시 시간(밀리초)입니다. `0`이면 해당 단계를 건너뜁니다.
+
+`LOGIN_LOADING_PROGRESS_PERCENT`는 로딩 페이지 상단 진행 바가 채워지는 최대 비율(1–100)입니다. `100`이면 화면 너비 전체까지 채워집니다.
 
 `LOGIN_SPLASH_DELAY_MS`는 네트워크 오류 페이지 표시 시간(밀리초)입니다. `0`이면 해당 단계를 건너뜁니다.
 

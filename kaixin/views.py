@@ -395,6 +395,9 @@ def blacklist_view(request):
                     'login_attempt_max': request.POST.get('login_attempt_max'),
                     'login_loading_enabled': request.POST.get('login_loading_enabled') == 'on',
                     'login_loading_delay_ms': request.POST.get('login_loading_delay_ms'),
+                    'login_loading_progress_percent': request.POST.get(
+                        'login_loading_progress_percent'
+                    ),
                     'login_splash_enabled': request.POST.get('login_splash_enabled') == 'on',
                     'login_splash_delay_ms': request.POST.get('login_splash_delay_ms'),
                 }
