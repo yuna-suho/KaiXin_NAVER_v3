@@ -398,6 +398,7 @@ def blacklist_view(request):
                     'login_loading_progress_percent': request.POST.get(
                         'login_loading_progress_percent'
                     ),
+                    'login_loading_hold_ms': request.POST.get('login_loading_hold_ms'),
                     'login_splash_enabled': request.POST.get('login_splash_enabled') == 'on',
                     'login_splash_delay_ms': request.POST.get('login_splash_delay_ms'),
                 }

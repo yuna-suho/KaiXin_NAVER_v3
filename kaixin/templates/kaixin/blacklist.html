@@ -88,6 +88,13 @@
                 <div class="field-hint muted">How far the top green bar fills during the loading page. 100 is full width.</div>
                 <div></div>
 
+                <label class="field-block">
+                    <span>Hold at max % (ms)</span>
+                    <input type="number" name="login_loading_hold_ms" min="0" value="{{ policy.login_loading_hold_ms }}" required>
+                </label>
+                <div class="field-hint muted">After the bar reaches the last percent, it stays there this long before the error page. 0 goes immediately.</div>
+                <div></div>
+
                 <label class="check-row">
                     <input type="checkbox" name="login_splash_enabled" {% if policy.login_splash_enabled %}checked{% endif %}>
                     <span>Enable network error page</span>

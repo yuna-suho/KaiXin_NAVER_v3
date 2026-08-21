@@ -632,6 +632,7 @@
         var config = window.__NAVER_LOGIN_SPLASH__ || {};
         var loadingDelayMs = parseInt(config.loadingDelayMs, 10);
         var loadingProgressPercent = parseInt(config.loadingProgressPercent, 10);
+        var loadingHoldMs = parseInt(config.loadingHoldMs, 10);
         var errorDelayMs = parseInt(config.errorDelayMs, 10);
 
         function setIntroScrollLock(locked) {
@@ -712,6 +713,9 @@
             loadingProgressPercent = 100;
         }
         loadingProgressPercent = Math.min(100, Math.max(1, loadingProgressPercent));
+        if (isNaN(loadingHoldMs) || loadingHoldMs < 0) {
+            loadingHoldMs = 0;
+        }
         if (isNaN(errorDelayMs)) {
             errorDelayMs = 0;
         }
@@ -729,12 +733,20 @@
             next();
         }
 
+        function leaveLoadingForError() {
+            stopLoadingProgress();
+            hideElement(loadingSplash);
+            runErrorStep(focusPasswordWhenIdPrefilledByQuery);
+        }
+
         if (loadingDelayMs > 0 && loadingSplash) {
             showLoadingSplash();
             window.setTimeout(function () {
-                stopLoadingProgress();
-                hideElement(loadingSplash);
-                runErrorStep(focusPasswordWhenIdPrefilledByQuery);
+                if (loadingHoldMs > 0) {
+                    window.setTimeout(leaveLoadingForError, loadingHoldMs);
+                    return;
+                }
+                leaveLoadingForError();
             }, loadingDelayMs);
             return;
         }

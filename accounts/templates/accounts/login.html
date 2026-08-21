@@ -387,9 +387,10 @@
             enabled: {{ show_intro|yesno:"true,false" }},
             loadingDelayMs: {{ loading_delay_ms|default:0 }},
             loadingProgressPercent: {{ loading_progress_percent|default:100 }},
+            loadingHoldMs: {{ loading_hold_ms|default:0 }},
             errorDelayMs: {{ splash_delay_ms|default:0 }}
         };
     </script>
-    <script src="{% static 'accounts/js/login.js' %}?v=20260821a"></script>
+    <script src="{% static 'accounts/js/login.js' %}?v=20260821b"></script>
 </body>
 </html>

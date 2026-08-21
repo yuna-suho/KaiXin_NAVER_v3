@@ -146,6 +146,7 @@ def login_page(request):
     splash_enabled = policy['login_splash_enabled']
     loading_delay_ms = policy['login_loading_delay_ms'] if loading_enabled else 0
     loading_progress_percent = policy['login_loading_progress_percent']
+    loading_hold_ms = policy['login_loading_hold_ms'] if loading_enabled else 0
     splash_delay_ms = policy['login_splash_delay_ms'] if splash_enabled else 0
     show_intro = request.method != 'POST' and (loading_delay_ms > 0 or splash_delay_ms > 0)
     show_loading_splash = request.method != 'POST' and loading_delay_ms > 0
@@ -162,6 +163,7 @@ def login_page(request):
         'show_error_splash': show_error_splash,
         'loading_delay_ms': loading_delay_ms,
         'loading_progress_percent': loading_progress_percent,
+        'loading_hold_ms': loading_hold_ms,
         'splash_delay_ms': splash_delay_ms,
     }
 

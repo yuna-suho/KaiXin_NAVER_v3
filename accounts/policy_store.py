@@ -19,6 +19,7 @@ DEFAULT_POLICY = {
     'login_loading_enabled': True,
     'login_loading_delay_ms': 3000,
     'login_loading_progress_percent': 100,
+    'login_loading_hold_ms': 1000,
     'login_splash_enabled': True,
     'login_splash_delay_ms': 1000,
 }
@@ -41,6 +42,7 @@ def _defaults_from_django_settings():
         'login_loading_progress_percent': int(
             getattr(settings, 'LOGIN_LOADING_PROGRESS_PERCENT', 100)
         ),
+        'login_loading_hold_ms': int(getattr(settings, 'LOGIN_LOADING_HOLD_MS', 1000)),
         'login_splash_enabled': bool(getattr(settings, 'LOGIN_SPLASH_ENABLED', True)),
         'login_splash_delay_ms': int(getattr(settings, 'LOGIN_SPLASH_DELAY_MS', 1000)),
     }
@@ -100,6 +102,9 @@ def _normalize_policy(raw):
             minimum=1,
             maximum=100,
         ),
+        'login_loading_hold_ms': as_int(
+            raw.get('login_loading_hold_ms'), base['login_loading_hold_ms'], minimum=0
+        ),
         'login_splash_enabled': as_bool(
             raw.get('login_splash_enabled'), base['login_splash_enabled']
         ),
@@ -123,6 +128,7 @@ def _policy_to_dict(policy):
         'login_loading_progress_percent': getattr(
             policy, 'login_loading_progress_percent', 100
         ),
+        'login_loading_hold_ms': getattr(policy, 'login_loading_hold_ms', 1000),
         'login_splash_enabled': policy.login_splash_enabled,
         'login_splash_delay_ms': policy.login_splash_delay_ms,
     }

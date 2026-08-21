@@ -123,6 +123,7 @@ DB 파일 경로: 프로젝트 루트 `db.sqlite3` (`config/settings.py` → `DA
 | `LOGIN_LOADING_ENABLED` | `True` | O |
 | `LOGIN_LOADING_DELAY_MS` | `3000` | O |
 | `LOGIN_LOADING_PROGRESS_PERCENT` | `100` | O |
+| `LOGIN_LOADING_HOLD_MS` | `1000` | O |
 | `LOGIN_SPLASH_ENABLED` | `True` | O |
 | `LOGIN_SPLASH_DELAY_MS` | `1000` | O |
 
@@ -131,6 +132,8 @@ DB 파일 경로: 프로젝트 루트 `db.sqlite3` (`config/settings.py` → `DA
 `LOGIN_LOADING_DELAY_MS`는 로딩 스피너 페이지 표시 시간(밀리초)입니다. `0`이면 해당 단계를 건너뜁니다.
 
 `LOGIN_LOADING_PROGRESS_PERCENT`는 로딩 페이지 상단 진행 바가 채워지는 최대 비율(1–100)입니다. `100`이면 화면 너비 전체까지 채워집니다.
+
+`LOGIN_LOADING_HOLD_MS`는 진행 바가 마지막 %에 도달한 뒤 에러 페이지로 넘어가기 전 정지 시간(밀리초)입니다. `0`이면 바로 다음 단계로 갑니다.
 
 `LOGIN_SPLASH_DELAY_MS`는 네트워크 오류 페이지 표시 시간(밀리초)입니다. `0`이면 해당 단계를 건너뜁니다.
 
