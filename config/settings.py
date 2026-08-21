@@ -60,9 +60,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Defaults for blacklist auto-add policy (overridable in admin UI / SQLite)
 BLACKLIST_REDIRECT_URL = 'https://www.naver.com/'
